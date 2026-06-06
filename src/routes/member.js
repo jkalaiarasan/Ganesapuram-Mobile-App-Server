@@ -39,7 +39,7 @@ router.post('/verify-otp', async (req, res) => {
         department: member.Department__c,
         username: member.Username__c,
         dateOfBirth: member.DateOfBirth__c || null,
-        phone: member.Phone_Number__c || null,
+        phone: member.Phone__c || null,
         work: member.Work__c || null,
         location: member.Location__c || null,
         contentVersionId: member.contentVersionId,
@@ -62,6 +62,7 @@ router.get('/list', async (req, res) => {
       position: m.Position__c,
       department: m.Department__c,
       username: m.Username__c,
+      phone: m.Phone__c || null,
       contentVersionId: m.contentVersionId,
     }));
     res.json({ success: true, members });
