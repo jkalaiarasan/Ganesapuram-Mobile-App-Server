@@ -15,7 +15,7 @@ router.get('/:number?', async (req, res) => {
     console.log('url ', url);
     const response = await axios.get(url);
     const k = response.data;
-    console.log('kural raw meaning:', JSON.stringify(k.meaning));
+    console.log('kural:', JSON.stringify(k));
     // Expose only what the app needs — Tamil meaning only
     res.json({
       success: true,
