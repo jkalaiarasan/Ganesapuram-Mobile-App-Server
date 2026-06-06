@@ -12,7 +12,7 @@ router.get('/:number?', async (req, res) => {
 
     const apiKey = process.env.THIRUKURAL_API_KEY;
     const url = `https://getthirukkural.appspot.com/api/3.0/kural/${number}?appid=${apiKey}`;
-
+    console.log('url ', url);
     const response = await axios.get(url);
     const k = response.data;
     console.log('kural raw meaning:', JSON.stringify(k.meaning));
