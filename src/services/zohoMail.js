@@ -160,7 +160,7 @@ async function sendOtpEmail(toEmail, memberName, otp) {
     <!-- Footer -->
     <tr>
       <td bgcolor="#0D0920" style="padding:22px 48px;text-align:center;">
-        <p style="margin:0 0 4px;font-size:10px;color:#6A5438;letter-spacing:3px;text-transform:uppercase;">UPR நட்பு சாம்ராஜ்யம்</p>
+        <p style="margin:0 0 4px;font-size:10px;color:#6A5438;letter-spacing:3px;text-transform:uppercase;">கணேசபுரம்</p>
         <p style="margin:0;font-size:10px;color:#4A3828;letter-spacing:1px;">இந்த மின்னஞ்சல் தானியங்கி. பதில் அளிக்க வேண்டாம்.</p>
       </td>
     </tr>
