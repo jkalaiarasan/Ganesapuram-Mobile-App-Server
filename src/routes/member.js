@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { queryMemberByEmail, getMemberListBulk, getMemberByEmail, getImageStream } = require('../services/salesforce');
 const { sendOtpEmail } = require('../services/zohoMail');
-const { generateOtp, storeOtp, verifyOtp } = require('../services/otp');
+const { generateOtp, createOtpToken, verifyOtpToken } = require('../services/otp');
 
 router.post('/request-otp', async (req, res) => {
   try {
@@ -11,9 +11,9 @@ router.post('/request-otp', async (req, res) => {
     const member = await queryMemberByEmail(email);
     if (!member) return res.status(404).json({ success: false, message: 'Member not found or not approved' });
     const otp = generateOtp();
-    storeOtp(email, otp);
+    const token = createOtpToken(email, otp);
     await sendOtpEmail(email, member.Name, otp);
-    res.json({ success: true, message: 'OTP sent to your email' });
+    res.json({ success: true, message: 'OTP sent to your email', token });
   } catch (err) {
     console.error('request-otp error:', err.message);
     res.status(500).json({ success: false, message: 'Failed to send OTP' });
@@ -22,9 +22,9 @@ router.post('/request-otp', async (req, res) => {
 
 router.post('/verify-otp', async (req, res) => {
   try {
-    const { email, otp } = req.body;
-    if (!email || !otp) return res.status(400).json({ success: false, message: 'Email and OTP required' });
-    const valid = verifyOtp(email, otp);
+    const { email, otp, token } = req.body;
+    if (!email || !otp || !token) return res.status(400).json({ success: false, message: 'Email, OTP and token required' });
+    const valid = verifyOtpToken(token, email, otp);
     if (!valid) return res.status(401).json({ success: false, message: 'Invalid or expired OTP' });
     const member = await getMemberByEmail(email);
     if (!member) return res.status(404).json({ success: false, message: 'Member not found' });
