@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
       const lat_n = parseFloat(lat);
       const lon_n = parseFloat(lon);
       if (lat_n >= 10.951649 && lat_n <= 10.960611 && lon_n >= 78.600805 && lon_n <= 78.612744) {
-        data.location.name = 'Temple, Ganesapuram';
+        data.location.name = 'Ganesapuram';
       }
     }
     res.json({ success: true, data });
