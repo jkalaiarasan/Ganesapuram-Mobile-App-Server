@@ -83,7 +83,7 @@ async function sendOtpEmail(toEmail, memberName, otp) {
         <table width="100%" cellpadding="0" cellspacing="0">
           <tr>
             <td style="padding:40px 44px 32px;text-align:center;border-bottom:1px solid #231F38;">
-              <h1 style="margin:0 0 8px;font-size:26px;font-weight:700;color:#F0E8D5;letter-spacing:1px;">கணேசாபுரம்</h1>
+              <h1 style="margin:0 0 8px;font-size:26px;font-weight:700;color:#F0E8D5;letter-spacing:1px;">கணேசபுரம்</h1>
               <p style="margin:0;font-size:11px;color:#6A5E80;letter-spacing:3px;text-transform:uppercase;">உறுப்பினர் சரிபார்ப்பு</p>
             </td>
           </tr>
