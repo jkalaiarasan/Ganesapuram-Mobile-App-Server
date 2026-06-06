@@ -48,7 +48,7 @@ async function sendMail({ toEmail, subject, htmlBody }) {
 }
 
 async function sendOtpEmail(toEmail, memberName, otp) {
-  const subject = 'உங்கள் சரிபார்ப்பு குறியீடு — கணேசாபுரம்';
+  const subject = 'உங்கள் சரிபார்ப்பு குறியீடு — கணேசபுரம்';
   const expiry  = process.env.OTP_EXPIRY_MINUTES || 10;
 
   const htmlBody = `<!DOCTYPE html>
@@ -119,11 +119,23 @@ async function sendOtpEmail(toEmail, memberName, otp) {
         <!-- OTP block -->
         <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:36px;">
           <tr><td align="center">
-            <table cellpadding="0" cellspacing="0" style="border:1px solid #C8A951;">
+            <!-- Outer gold border frame -->
+            <table cellpadding="0" cellspacing="0" style="border:2px solid #D4AF37;">
               <tr>
-                <td bgcolor="#120F1C" style="padding:36px 56px;text-align:center;">
-                  <p style="margin:0 0 12px;font-size:9px;letter-spacing:5px;color:#4A3820;text-transform:uppercase;">One Time Password</p>
-                  <p style="margin:0;font-size:44px;font-weight:700;color:#D4AF37;letter-spacing:14px;font-family:'Courier New',Courier,monospace;">${otp}</p>
+                <td style="padding:3px;background-color:#C8A951;">
+                  <!-- Inner gold-yellow fill -->
+                  <table cellpadding="0" cellspacing="0">
+                    <tr>
+                      <td style="padding:34px 56px;text-align:center;background-color:#F0C040;">
+                        <p style="margin:0 0 10px;font-size:9px;letter-spacing:5px;color:#5A3A00;text-transform:uppercase;font-weight:700;">One Time Password</p>
+                        <!-- Thin dark rule under label -->
+                        <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;"><tr>
+                          <td style="height:1px;font-size:0;background-color:#B8860B;">&nbsp;</td>
+                        </tr></table>
+                        <p style="margin:0;font-size:46px;font-weight:700;color:#1A0E00;letter-spacing:14px;font-family:'Courier New',Courier,monospace;">${otp}</p>
+                      </td>
+                    </tr>
+                  </table>
                 </td>
               </tr>
             </table>
