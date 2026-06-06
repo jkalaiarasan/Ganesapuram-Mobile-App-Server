@@ -58,7 +58,7 @@ async function sendOtpEmail(toEmail, memberName, otp) {
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>OTP — கணேசபுரம்</title>
 </head>
-<body style="margin:0;padding:0;background-color:#FEF8E7;">
+<body style="margin:0;padding:0;">
 <table width="100%" cellpadding="0" cellspacing="0" bgcolor="#FEF8E7">
 
   <!-- Stars — top scatter -->
@@ -75,7 +75,7 @@ async function sendOtpEmail(toEmail, memberName, otp) {
     <table width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;">
 
       <!-- Gold top strip -->
-      <tr><td style="height:4px;background-color:#D4AF37;font-size:0;">&nbsp;</td></tr>
+      <tr><td style="height:4px;font-size:0;">&nbsp;</td></tr>
 
       <!-- Card body -->
       <tr><td bgcolor="#1C1B2E" style="padding:40px 40px 32px;">
@@ -113,7 +113,7 @@ async function sendOtpEmail(toEmail, memberName, otp) {
       </td></tr>
 
       <!-- Gold bottom strip -->
-      <tr><td style="height:4px;background-color:#D4AF37;font-size:0;">&nbsp;</td></tr>
+      <tr><td style="height:4px;font-size:0;">&nbsp;</td></tr>
 
       <!-- Footer -->
       <tr>
