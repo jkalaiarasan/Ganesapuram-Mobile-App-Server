@@ -58,62 +58,83 @@ async function sendOtpEmail(toEmail, memberName, otp) {
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>OTP — கணேசபுரம்</title>
 </head>
-<body style="margin:0;padding:0;background-color:#10101A;">
-<table width="100%" cellpadding="0" cellspacing="0"><tr><td align="center" style="padding:44px 16px;">
+<body style="margin:0;padding:0;background-color:#FEF8E7;">
+<table width="100%" cellpadding="0" cellspacing="0" bgcolor="#FEF8E7">
 
-  <table width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;">
+  <!-- Stars — top scatter -->
+  <tr><td style="padding:24px 8px 0;text-align:center;">
+    <p style="margin:0 0 6px;font-size:16px;color:#D4AF37;letter-spacing:22px;line-height:1;font-family:Arial;">★ ✦ ★ ✦ ★ ✦ ★ ✦ ★ ✦ ★</p>
+    <p style="margin:0 0 6px;font-size:10px;color:#C8A020;letter-spacing:34px;line-height:1;font-family:Arial;">· ✧ ⋆ · ✧ ⋆ · ✧ ⋆ · ✧ ⋆</p>
+    <p style="margin:0 0 6px;font-size:13px;color:#D4AF37;letter-spacing:18px;line-height:1;font-family:Arial;">✦ ★ ✧ ✦ ★ ✧ ✦ ★ ✧ ✦ ★ ✧</p>
+    <p style="margin:0 0 6px;font-size:8px;color:#C8A020;letter-spacing:42px;line-height:1;font-family:Arial;">⋆ · ⋆ · ⋆ · ⋆ · ⋆ · ⋆ · ⋆</p>
+    <p style="margin:0 0 20px;font-size:14px;color:#D4AF37;letter-spacing:26px;line-height:1;font-family:Arial;">★ ✧ ✦ ★ ✧ ✦ ★ ✧ ✦ ★ ✧ ✦</p>
+  </td></tr>
 
-    <!-- Gold top strip -->
-    <tr><td style="height:4px;background-color:#D4AF37;font-size:0;">&nbsp;</td></tr>
+  <!-- Card row -->
+  <tr><td align="center" style="padding:0 16px;">
+    <table width="100%" cellpadding="0" cellspacing="0" style="max-width:480px;">
 
-    <!-- Card -->
-    <tr><td bgcolor="#1C1B2E" style="padding:40px 40px 32px;">
+      <!-- Gold top strip -->
+      <tr><td style="height:4px;background-color:#D4AF37;font-size:0;">&nbsp;</td></tr>
 
-      <!-- Brand -->
-      <p style="margin:0 0 6px;font-size:22px;font-weight:700;color:#F0E8D5;font-family:Arial,sans-serif;text-align:center;">கணேசபுரம்</p>
-      
-      <!-- Divider -->
-      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;"><tr><td style="height:1px;background-color:#2E2A48;font-size:0;">&nbsp;</td></tr></table>
+      <!-- Card body -->
+      <tr><td bgcolor="#1C1B2E" style="padding:40px 40px 32px;">
 
-      <!-- Greeting -->
-      <p style="margin:0 0 6px;font-size:13px;color:#7A708A;font-family:Arial,sans-serif;">வணக்கம், <strong style="color:#D4AF37;">${memberName}</strong></p>
-      <p style="margin:0 0 28px;font-size:14px;color:#8A8098;font-family:Arial,sans-serif;line-height:1.7;">உங்கள் உள்நுழைவு OTP குறியீடு கீழே உள்ளது.</p>
+        <!-- Brand -->
+        <p style="margin:0 0 6px;font-size:22px;font-weight:700;color:#F0E8D5;font-family:Arial,sans-serif;text-align:center;">கணேசபுரம்</p>
 
-      <!-- OTP highlight box -->
-      <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
-        <tr>
-          <td style="background-color:#0C0C1A;border:2px solid #D4AF37;padding:28px 16px 24px;text-align:center;">
-            <p style="margin:0 0 10px;font-size:10px;font-weight:700;letter-spacing:5px;color:#9A8050;text-transform:uppercase;font-family:Arial,sans-serif;">ONE TIME PASSWORD</p>
-            <p style="margin:0;font-size:64px;font-weight:800;color:#FFD700;letter-spacing:22px;font-family:'Courier New',Courier,monospace;line-height:1.15;">${otp}</p>
-          </td>
-        </tr>
-      </table>
+        <!-- Divider -->
+        <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;"><tr><td style="height:1px;background-color:#2E2A48;font-size:0;">&nbsp;</td></tr></table>
 
-      <!-- Expiry -->
-      <p style="margin:0 0 20px;font-size:13px;color:#8A7860;text-align:center;font-family:Arial,sans-serif;">
-        இது <strong style="color:#D4AF37;">${expiry} நிமிடங்களில்</strong> காலாவதியாகும்
-      </p>
+        <!-- Greeting -->
+        <p style="margin:0 0 6px;font-size:13px;color:#7A708A;font-family:Arial,sans-serif;">வணக்கம், <strong style="color:#D4AF37;">${memberName}</strong></p>
+        <p style="margin:0 0 28px;font-size:14px;color:#8A8098;font-family:Arial,sans-serif;line-height:1.7;">உங்கள் உள்நுழைவு OTP குறியீடு கீழே உள்ளது.</p>
 
-      <!-- Security -->
-      <p style="margin:0;font-size:12px;color:#3E3858;text-align:center;font-family:Arial,sans-serif;line-height:1.7;">
-        யாரிடமும் பகிர வேண்டாம் &nbsp;&bull;&nbsp; OTP கோரவில்லை எனில் புறக்கணிக்கவும்
-      </p>
+        <!-- OTP highlight box -->
+        <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+          <tr>
+            <td style="background-color:#0C0C1A;border:2px solid #D4AF37;padding:28px 16px 24px;text-align:center;">
+              <p style="margin:0 0 10px;font-size:10px;font-weight:700;letter-spacing:5px;color:#9A8050;text-transform:uppercase;font-family:Arial,sans-serif;">ONE TIME PASSWORD</p>
+              <p style="margin:0;font-size:64px;font-weight:800;color:#FFD700;letter-spacing:22px;font-family:'Courier New',Courier,monospace;line-height:1.15;">${otp}</p>
+            </td>
+          </tr>
+        </table>
 
-    </td></tr>
+        <!-- Expiry -->
+        <p style="margin:0 0 20px;font-size:13px;color:#8A7860;text-align:center;font-family:Arial,sans-serif;">
+          இது <strong style="color:#D4AF37;">${expiry} நிமிடங்களில்</strong> காலாவதியாகும்
+        </p>
 
-    <!-- Gold bottom strip -->
-    <tr><td style="height:4px;background-color:#D4AF37;font-size:0;">&nbsp;</td></tr>
+        <!-- Security -->
+        <p style="margin:0;font-size:12px;color:#5A5070;text-align:center;font-family:Arial,sans-serif;line-height:1.7;">
+          யாரிடமும் பகிர வேண்டாம் &nbsp;&bull;&nbsp; OTP கோரவில்லை எனில் புறக்கணிக்கவும்
+        </p>
 
-    <!-- Footer -->
-    <tr>
-      <td style="padding:16px 0;text-align:center;">
-        <p style="margin:0;font-size:10px;color:#2E2A40;font-family:Arial,sans-serif;letter-spacing:1px;">கணேசபுரம் &bull; தானியங்கி மின்னஞ்சல்</p>
-      </td>
-    </tr>
+      </td></tr>
 
-  </table>
+      <!-- Gold bottom strip -->
+      <tr><td style="height:4px;background-color:#D4AF37;font-size:0;">&nbsp;</td></tr>
 
-</td></tr></table>
+      <!-- Footer -->
+      <tr>
+        <td style="padding:14px 0;text-align:center;">
+          <p style="margin:0;font-size:10px;color:#9A8040;font-family:Arial,sans-serif;letter-spacing:1px;">கணேசபுரம் &bull; தானியங்கி மின்னஞ்சல்</p>
+        </td>
+      </tr>
+
+    </table>
+  </td></tr>
+
+  <!-- Stars — bottom scatter -->
+  <tr><td style="padding:0 8px 28px;text-align:center;">
+    <p style="margin:20px 0 6px;font-size:14px;color:#D4AF37;letter-spacing:26px;line-height:1;font-family:Arial;">★ ✧ ✦ ★ ✧ ✦ ★ ✧ ✦ ★ ✧ ✦</p>
+    <p style="margin:0 0 6px;font-size:8px;color:#C8A020;letter-spacing:42px;line-height:1;font-family:Arial;">⋆ · ⋆ · ⋆ · ⋆ · ⋆ · ⋆ · ⋆</p>
+    <p style="margin:0 0 6px;font-size:13px;color:#D4AF37;letter-spacing:18px;line-height:1;font-family:Arial;">✦ ★ ✧ ✦ ★ ✧ ✦ ★ ✧ ✦ ★ ✧</p>
+    <p style="margin:0 0 6px;font-size:10px;color:#C8A020;letter-spacing:34px;line-height:1;font-family:Arial;">· ✧ ⋆ · ✧ ⋆ · ✧ ⋆ · ✧ ⋆</p>
+    <p style="margin:0;font-size:16px;color:#D4AF37;letter-spacing:22px;line-height:1;font-family:Arial;">★ ✦ ★ ✦ ★ ✦ ★ ✦ ★ ✦ ★</p>
+  </td></tr>
+
+</table>
 </body>
 </html>`;
 
