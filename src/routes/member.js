@@ -37,7 +37,6 @@ router.post('/verify-otp', async (req, res) => {
         uprId: member.UPRId__c,
         position: member.Position__c,
         department: member.Department__c,
-        username: member.Username__c,
         dateOfBirth: member.DateOfBirth__c || null,
         phone: member.Phone__c || null,
         work: member.Work__c || null,
@@ -61,7 +60,6 @@ router.get('/list', async (req, res) => {
       uprId: m.UPRId__c,
       position: m.Position__c,
       department: m.Department__c,
-      username: m.Username__c,
       phone: m.Phone__c || null,
       contentVersionId: m.contentVersionId,
     }));

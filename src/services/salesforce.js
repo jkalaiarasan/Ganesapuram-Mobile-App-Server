@@ -56,7 +56,7 @@ async function queryMemberByEmail(email) {
 // Bulk query — 4 queries total regardless of member count (no N+1)
 async function getMemberListBulk() {
   const members = await sfQuery(
-    `SELECT Id, Name, Username__c, UPRId__c, Position__c, Department__c, Phone__c
+    `SELECT Id, Name, UPRId__c, Position__c, Department__c, Phone__c
      FROM Member__c WHERE Is_Approved__c = true ORDER BY Order__c ASC NULLS LAST`
   );
   if (!members.length) return [];
@@ -92,7 +92,7 @@ async function getMemberListBulk() {
 
 async function getMemberByEmail(email) {
   const rows = await sfQuery(
-    `SELECT Id, Name, Email__c, UPRId__c, Position__c, Department__c, Username__c,
+    `SELECT Id, Name, Email__c, UPRId__c, Position__c, Department__c,
             DateOfBirth__c, Phone__c, Work__c, Location__c
      FROM Member__c WHERE Email__c = '${email.replace(/'/g, "\\'")}' AND Is_Approved__c = true LIMIT 1`
   );
