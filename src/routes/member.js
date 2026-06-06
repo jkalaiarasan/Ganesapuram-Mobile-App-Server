@@ -1,22 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const { queryMemberByEmail, getMemberList, getMemberByEmail, getMemberProfileImageUrl } = require('../services/salesforce');
+const { queryMemberByEmail, getMemberListBulk, getMemberByEmail, getImageStream } = require('../services/salesforce');
 const { sendOtpEmail } = require('../services/zohoMail');
 const { generateOtp, storeOtp, verifyOtp } = require('../services/otp');
 
-// POST /api/member/request-otp  { email }
 router.post('/request-otp', async (req, res) => {
   try {
     const { email } = req.body;
     if (!email) return res.status(400).json({ success: false, message: 'Email required' });
-
     const member = await queryMemberByEmail(email);
     if (!member) return res.status(404).json({ success: false, message: 'Member not found or not approved' });
-
     const otp = generateOtp();
     storeOtp(email, otp);
     await sendOtpEmail(email, member.Name, otp);
-
     res.json({ success: true, message: 'OTP sent to your email' });
   } catch (err) {
     console.error('request-otp error:', err.message);
@@ -24,20 +20,14 @@ router.post('/request-otp', async (req, res) => {
   }
 });
 
-// POST /api/member/verify-otp  { email, otp }
 router.post('/verify-otp', async (req, res) => {
   try {
     const { email, otp } = req.body;
     if (!email || !otp) return res.status(400).json({ success: false, message: 'Email and OTP required' });
-
     const valid = verifyOtp(email, otp);
     if (!valid) return res.status(401).json({ success: false, message: 'Invalid or expired OTP' });
-
     const member = await getMemberByEmail(email);
     if (!member) return res.status(404).json({ success: false, message: 'Member not found' });
-
-    const profileImageUrl = await getMemberProfileImageUrl(member.Id);
-
     res.json({
       success: true,
       member: {
@@ -48,7 +38,11 @@ router.post('/verify-otp', async (req, res) => {
         position: member.Position__c,
         department: member.Department__c,
         username: member.Username__c,
-        profileImageUrl,
+        dateOfBirth: member.DateOfBirth__c || null,
+        phone: member.Phone_Number__c || null,
+        work: member.Work__c || null,
+        location: member.Location__c || null,
+        contentVersionId: member.contentVersionId,
       },
     });
   } catch (err) {
@@ -57,20 +51,36 @@ router.post('/verify-otp', async (req, res) => {
   }
 });
 
-// GET /api/member/list
+// GET /api/member/list — bulk query, returns contentVersionId per member
 router.get('/list', async (req, res) => {
   try {
-    const members = await getMemberList();
-    const withImages = await Promise.all(
-      members.map(async (m) => {
-        const profileImageUrl = await getMemberProfileImageUrl(m.Id);
-        return { ...m, profileImageUrl };
-      })
-    );
-    res.json({ success: true, members: withImages });
+    const raw = await getMemberListBulk();
+    const members = raw.map(m => ({
+      id: m.Id,
+      name: m.Name,
+      uprId: m.UPRId__c,
+      position: m.Position__c,
+      department: m.Department__c,
+      username: m.Username__c,
+      contentVersionId: m.contentVersionId,
+    }));
+    res.json({ success: true, members });
   } catch (err) {
     console.error('member list error:', err.message);
     res.status(500).json({ success: false, message: 'Failed to fetch members' });
+  }
+});
+
+// GET /api/member/image/:versionId — proxy Salesforce ContentVersion image
+router.get('/image/:versionId', async (req, res) => {
+  try {
+    const { stream, contentType } = await getImageStream(req.params.versionId);
+    res.setHeader('Content-Type', contentType);
+    res.setHeader('Cache-Control', 'public, max-age=86400');
+    stream.pipe(res);
+  } catch (err) {
+    console.error('image proxy error:', err.message);
+    res.status(404).end();
   }
 });
 

@@ -14,7 +14,19 @@ router.get('/:number?', async (req, res) => {
     const url = `https://getthirukkural.appspot.com/api/3.0/kural/${number}?appid=${apiKey}`;
 
     const response = await axios.get(url);
-    res.json({ success: true, kural: response.data, number });
+    const k = response.data;
+    console.log('kural raw meaning:', JSON.stringify(k.meaning));
+    // Expose only what the app needs — Tamil meaning only
+    res.json({
+      success: true,
+      number,
+      kural: {
+        line1:   k.line1 || '',
+        line2:   k.line2 || '',
+        chapter: k.chapter?.name || '',
+        porul:   k.meaning?.ta?.ainsi || k.meaning?.ta || '',
+      },
+    });
   } catch (err) {
     console.error('kural error:', err.message);
     res.status(500).json({ success: false, message: 'Failed to fetch Thirukural' });
