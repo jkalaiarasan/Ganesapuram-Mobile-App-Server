@@ -71,8 +71,7 @@ async function sendOtpEmail(toEmail, memberName, otp) {
 
       <!-- Brand -->
       <p style="margin:0 0 6px;font-size:22px;font-weight:700;color:#F0E8D5;font-family:Arial,sans-serif;text-align:center;">கணேசபுரம்</p>
-      <p style="margin:0 0 32px;font-size:10px;color:#5A5475;letter-spacing:4px;text-transform:uppercase;font-family:Arial,sans-serif;text-align:center;">UPR நட்பு சாம்ராஜ்யம்</p>
-
+      
       <!-- Divider -->
       <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;"><tr><td style="height:1px;background-color:#2E2A48;font-size:0;">&nbsp;</td></tr></table>
 
