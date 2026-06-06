@@ -56,96 +56,82 @@ async function sendOtpEmail(toEmail, memberName, otp) {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>OTP — கணேசாபுரம்</title>
+  <title>OTP — கணேசபுரம்</title>
 </head>
-<body style="margin:0;padding:0;background-color:#07050D;font-family:Georgia,'Times New Roman',serif;">
+<body style="margin:0;padding:0;background-color:#06040C;font-family:Georgia,'Times New Roman',serif;">
 
-<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#07050D">
-<tr><td align="center" style="padding:52px 16px;">
+<table width="100%" cellpadding="0" cellspacing="0" border="0" bgcolor="#06040C">
+<tr><td align="center" style="padding:48px 16px;">
 
-  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:560px;">
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="max-width:540px;">
 
-    <!-- Top gold rule -->
-    <tr>
-      <td style="height:1px;line-height:1px;font-size:0;" bgcolor="#C8A951">&nbsp;</td>
-    </tr>
-    <tr>
-      <td style="height:2px;line-height:2px;font-size:0;" bgcolor="#D4AF37">&nbsp;</td>
-    </tr>
-    <tr>
-      <td style="height:1px;line-height:1px;font-size:0;" bgcolor="#C8A951">&nbsp;</td>
-    </tr>
+    <!-- Top gold bar -->
+    <tr><td style="height:1px;line-height:1px;font-size:0;" bgcolor="#7A5C10">&nbsp;</td></tr>
+    <tr><td style="height:3px;line-height:3px;font-size:0;" bgcolor="#D4AF37">&nbsp;</td></tr>
+    <tr><td style="height:1px;line-height:1px;font-size:0;" bgcolor="#7A5C10">&nbsp;</td></tr>
 
     <!-- Header -->
     <tr>
-      <td bgcolor="#0E0A18" style="padding:48px 52px 40px;text-align:center;border-left:1px solid #1E1630;border-right:1px solid #1E1630;">
-
-        <p style="margin:0 0 14px;font-size:10px;font-weight:700;letter-spacing:5px;color:#C8A951;text-transform:uppercase;">UPR நட்பு சாம்ராஜ்யம்</p>
-
-        <h1 style="margin:0 0 10px;font-size:34px;font-weight:700;color:#F0E8D5;letter-spacing:3px;font-style:italic;">கணேசாபுரம்</h1>
-
-        <p style="margin:0 0 28px;font-size:10px;color:#5E4E30;letter-spacing:4px;text-transform:uppercase;">உறுப்பினர் சரிபார்ப்பு</p>
-
-        <!-- Ornament divider -->
+      <td bgcolor="#0D0920" style="padding:44px 48px 32px;text-align:center;">
+        <p style="margin:0 0 12px;font-size:10px;font-weight:700;letter-spacing:5px;color:#C8A951;text-transform:uppercase;">UPR நட்பு சாம்ராஜ்யம்</p>
+        <h1 style="margin:0 0 10px;font-size:32px;font-weight:700;color:#F0E8D5;letter-spacing:3px;font-style:italic;">கணேசாபுரம்</h1>
+        <p style="margin:0 0 24px;font-size:10px;color:#8A7050;letter-spacing:4px;text-transform:uppercase;">உறுப்பினர் சரிபார்ப்பு</p>
         <table width="100%" cellpadding="0" cellspacing="0"><tr>
-          <td width="40%" style="height:1px;font-size:0;" bgcolor="#1E1630">&nbsp;</td>
-          <td style="font-size:12px;color:#C8A951;text-align:center;padding:0 14px;line-height:1;">◆</td>
-          <td width="40%" style="height:1px;font-size:0;" bgcolor="#1E1630">&nbsp;</td>
-        </tr></table>
-
-      </td>
-    </tr>
-
-    <!-- Header–body separator -->
-    <tr>
-      <td bgcolor="#0E0A18" style="padding:0 52px;border-left:1px solid #1E1630;border-right:1px solid #1E1630;">
-        <table width="100%" cellpadding="0" cellspacing="0"><tr>
-          <td style="height:1px;font-size:0;" bgcolor="#D4AF37">&nbsp;</td>
+          <td style="height:1px;font-size:0;background-color:#1E1630;">&nbsp;</td>
+          <td style="font-size:13px;color:#C8A951;text-align:center;padding:0 14px;line-height:1;white-space:nowrap;">◆</td>
+          <td style="height:1px;font-size:0;background-color:#1E1630;">&nbsp;</td>
         </tr></table>
       </td>
     </tr>
+
+    <!-- Header → body gold line -->
+    <tr><td style="height:1px;line-height:1px;font-size:0;" bgcolor="#D4AF37">&nbsp;</td></tr>
 
     <!-- Body -->
     <tr>
-      <td bgcolor="#0B0816" style="padding:44px 52px 48px;border-left:1px solid #1E1630;border-right:1px solid #1E1630;">
+      <td bgcolor="#0A0716" style="padding:40px 48px 44px;">
 
-        <p style="margin:0 0 4px;font-size:12px;color:#5E4E30;letter-spacing:1px;">வணக்கம்,</p>
-        <p style="margin:0 0 30px;font-size:22px;font-weight:600;color:#D4AF37;letter-spacing:0.5px;">${memberName}</p>
+        <p style="margin:0 0 4px;font-size:12px;color:#8A7050;letter-spacing:1px;">வணக்கம்,</p>
+        <p style="margin:0 0 28px;font-size:20px;font-weight:600;color:#D4AF37;letter-spacing:0.5px;">${memberName}</p>
 
-        <p style="margin:0 0 36px;font-size:14px;color:#9C8B6A;line-height:1.85;">
+        <p style="margin:0 0 36px;font-size:14px;color:#9C8B6A;line-height:1.9;">
           உங்கள் உள்நுழைவை சரிபார்க்க கீழே உள்ள ஒரு முறை<br>கடவுச்சொல்லைப் பயன்படுத்தவும்.
         </p>
 
-        <!-- OTP block -->
-        <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:36px;">
-          <tr><td align="center">
-            <!-- Outer gold border frame -->
-            <table cellpadding="0" cellspacing="0" style="border:2px solid #D4AF37;">
+        <!-- OTP highlight block -->
+        <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:32px;">
+          <tr><td>
+            <!-- Top accent bar -->
+            <table width="100%" cellpadding="0" cellspacing="0"><tr>
+              <td style="height:3px;font-size:0;background-color:#D4AF37;">&nbsp;</td>
+            </tr></table>
+            <!-- OTP card -->
+            <table width="100%" cellpadding="0" cellspacing="0">
               <tr>
-                <td style="padding:3px;background-color:#C8A951;">
-                  <!-- Inner gold-yellow fill -->
-                  <table cellpadding="0" cellspacing="0">
-                    <tr>
-                      <td style="padding:34px 56px;text-align:center;background-color:#F0C040;">
-                        <p style="margin:0 0 10px;font-size:9px;letter-spacing:5px;color:#5A3A00;text-transform:uppercase;font-weight:700;">One Time Password</p>
-                        <!-- Thin dark rule under label -->
-                        <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:16px;"><tr>
-                          <td style="height:1px;font-size:0;background-color:#B8860B;">&nbsp;</td>
-                        </tr></table>
-                        <p style="margin:0;font-size:46px;font-weight:700;color:#1A0E00;letter-spacing:14px;font-family:'Courier New',Courier,monospace;">${otp}</p>
-                      </td>
-                    </tr>
-                  </table>
+                <td bgcolor="#100D20" style="padding:38px 24px 34px;text-align:center;">
+                  <p style="margin:0 0 6px;font-size:9px;letter-spacing:6px;color:#C8A951;text-transform:uppercase;font-weight:700;">One Time Password</p>
+                  <!-- Decorative centre line -->
+                  <table width="220" cellpadding="0" cellspacing="0" align="center" style="margin:0 auto 22px;"><tr>
+                    <td style="height:1px;font-size:0;background-color:#2A1E3C;">&nbsp;</td>
+                    <td width="60" style="height:1px;font-size:0;background-color:#D4AF37;">&nbsp;</td>
+                    <td style="height:1px;font-size:0;background-color:#2A1E3C;">&nbsp;</td>
+                  </tr></table>
+                  <!-- OTP digits -->
+                  <p style="margin:0;font-size:54px;font-weight:700;color:#F2C94C;letter-spacing:16px;font-family:'Courier New',Courier,monospace;">${otp}</p>
                 </td>
               </tr>
             </table>
+            <!-- Bottom accent bar -->
+            <table width="100%" cellpadding="0" cellspacing="0"><tr>
+              <td style="height:3px;font-size:0;background-color:#D4AF37;">&nbsp;</td>
+            </tr></table>
           </td></tr>
         </table>
 
         <!-- Expiry notice -->
-        <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:14px;">
+        <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:12px;">
           <tr>
-            <td style="padding:16px 20px;border-left:2px solid #D4AF37;background-color:#120F1C;">
+            <td style="padding:14px 18px;border-left:3px solid #D4AF37;background-color:#0E0B1A;">
               <p style="margin:0;font-size:13px;color:#B89A60;line-height:1.6;">
                 இந்த OTP <strong style="color:#F0E8D5;">${expiry} நிமிடங்களில்</strong> காலாவதியாகும்.
               </p>
@@ -156,8 +142,8 @@ async function sendOtpEmail(toEmail, memberName, otp) {
         <!-- Security notice -->
         <table width="100%" cellpadding="0" cellspacing="0">
           <tr>
-            <td style="padding:16px 20px;border-left:2px solid #2A2040;background-color:#0E0B18;">
-              <p style="margin:0;font-size:12px;color:#5E4E30;line-height:1.75;">
+            <td style="padding:14px 18px;border-left:3px solid #251A38;background-color:#080612;">
+              <p style="margin:0;font-size:12px;color:#6A5848;line-height:1.8;">
                 இந்த OTP-ஐ யாரிடமும் பகிர வேண்டாம். நீங்கள் OTP கோரவில்லை
                 எனில் இந்த மின்னஞ்சலை புறக்கணிக்கவும்.
               </p>
@@ -168,33 +154,21 @@ async function sendOtpEmail(toEmail, memberName, otp) {
       </td>
     </tr>
 
-    <!-- Body–footer separator -->
-    <tr>
-      <td bgcolor="#0E0A18" style="padding:0 52px;border-left:1px solid #1E1630;border-right:1px solid #1E1630;">
-        <table width="100%" cellpadding="0" cellspacing="0"><tr>
-          <td style="height:1px;font-size:0;" bgcolor="#D4AF37">&nbsp;</td>
-        </tr></table>
-      </td>
-    </tr>
+    <!-- Body → footer gold line -->
+    <tr><td style="height:1px;line-height:1px;font-size:0;" bgcolor="#D4AF37">&nbsp;</td></tr>
 
     <!-- Footer -->
     <tr>
-      <td bgcolor="#0E0A18" style="padding:26px 52px;text-align:center;border-left:1px solid #1E1630;border-right:1px solid #1E1630;">
-        <p style="margin:0 0 5px;font-size:10px;color:#3A2C18;letter-spacing:3px;text-transform:uppercase;">UPR நட்பு சாம்ராஜ்யம்</p>
-        <p style="margin:0;font-size:10px;color:#2E2218;letter-spacing:1px;">இந்த மின்னஞ்சல் தானியங்கி. பதில் அளிக்க வேண்டாம்.</p>
+      <td bgcolor="#0D0920" style="padding:22px 48px;text-align:center;">
+        <p style="margin:0 0 4px;font-size:10px;color:#6A5438;letter-spacing:3px;text-transform:uppercase;">UPR நட்பு சாம்ராஜ்யம்</p>
+        <p style="margin:0;font-size:10px;color:#4A3828;letter-spacing:1px;">இந்த மின்னஞ்சல் தானியங்கி. பதில் அளிக்க வேண்டாம்.</p>
       </td>
     </tr>
 
-    <!-- Bottom gold rule -->
-    <tr>
-      <td style="height:1px;line-height:1px;font-size:0;" bgcolor="#C8A951">&nbsp;</td>
-    </tr>
-    <tr>
-      <td style="height:2px;line-height:2px;font-size:0;" bgcolor="#D4AF37">&nbsp;</td>
-    </tr>
-    <tr>
-      <td style="height:1px;line-height:1px;font-size:0;" bgcolor="#C8A951">&nbsp;</td>
-    </tr>
+    <!-- Bottom gold bar -->
+    <tr><td style="height:1px;line-height:1px;font-size:0;" bgcolor="#7A5C10">&nbsp;</td></tr>
+    <tr><td style="height:3px;line-height:3px;font-size:0;" bgcolor="#D4AF37">&nbsp;</td></tr>
+    <tr><td style="height:1px;line-height:1px;font-size:0;" bgcolor="#7A5C10">&nbsp;</td></tr>
 
   </table>
 
