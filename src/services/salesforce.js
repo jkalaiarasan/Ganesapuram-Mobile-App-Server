@@ -39,11 +39,18 @@ async function getAuth() {
 
 async function sfQuery(soql) {
   const { token, instanceUrl } = await getAuth();
-  const res = await axios.get(`${instanceUrl}/services/data/v63.0/query`, {
+  let res = await axios.get(`${instanceUrl}/services/data/v63.0/query`, {
     params: { q: soql },
     headers: { Authorization: `Bearer ${token}` },
   });
-  return res.data.records;
+  let records = res.data.records;
+  while (!res.data.done && res.data.nextRecordsUrl) {
+    res = await axios.get(`${instanceUrl}${res.data.nextRecordsUrl}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+    records = records.concat(res.data.records);
+  }
+  return records;
 }
 
 async function queryMemberByEmail(email) {
