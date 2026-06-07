@@ -57,7 +57,7 @@ async function queryMemberByEmail(email) {
 async function getMemberListBulk() {
   const members = await sfQuery(
     `SELECT Id, Name, UPRId__c, Position__c, Department__c, Phone__c
-     FROM Member__c WHERE Is_Approved__c = true ORDER BY Order__c ASC NULLS LAST`
+     FROM Member__c WHERE Is_Approved__c = true AND HidePublic__c = false ORDER BY Order__c ASC NULLS LAST`
   );
   if (!members.length) return [];
 
@@ -93,7 +93,7 @@ async function getMemberListBulk() {
 async function getMemberByEmail(email) {
   const rows = await sfQuery(
     `SELECT Id, Name, Email__c, UPRId__c, Position__c, Department__c,
-            DateOfBirth__c, Phone__c, Work__c, Location__c
+            DateOfBirth__c, Phone__c, Work__c, Location__c, Type__c
      FROM Member__c WHERE Email__c = '${email.replace(/'/g, "\\'")}' AND Is_Approved__c = true LIMIT 1`
   );
   if (!rows[0]) return null;

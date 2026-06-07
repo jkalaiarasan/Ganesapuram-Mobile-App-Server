@@ -42,6 +42,7 @@ router.post('/verify-otp', async (req, res) => {
         work: member.Work__c || null,
         location: member.Location__c || null,
         contentVersionId: member.contentVersionId,
+        type: member.Type__c || null,
       },
     });
   } catch (err) {
