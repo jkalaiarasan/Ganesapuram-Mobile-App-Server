@@ -130,9 +130,19 @@ async function getImageStream(versionId) {
   return { stream: res.data, contentType: res.headers['content-type'] || 'image/jpeg' };
 }
 
+async function updateMemberPushToken(memberId, expoPushToken) {
+  const { token, instanceUrl } = await getAuth();
+  await axios.patch(
+    `${instanceUrl}/services/data/v63.0/sobjects/Member__c/${memberId}`,
+    { ExpoPushToken__c: expoPushToken },
+    { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
+  );
+}
+
 module.exports = {
   queryMemberByEmail,
   getMemberListBulk,
   getMemberByEmail,
   getImageStream,
+  updateMemberPushToken,
 };

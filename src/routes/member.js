@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { queryMemberByEmail, getMemberListBulk, getMemberByEmail, getImageStream } = require('../services/salesforce');
+const { queryMemberByEmail, getMemberListBulk, getMemberByEmail, getImageStream, updateMemberPushToken } = require('../services/salesforce');
 const { sendOtpEmail } = require('../services/zohoMail');
 const { generateOtp, createOtpToken, verifyOtpToken } = require('../services/otp');
 
@@ -48,6 +48,21 @@ router.post('/verify-otp', async (req, res) => {
   } catch (err) {
     console.error('verify-otp error:', err.message);
     res.status(500).json({ success: false, message: 'Verification failed' });
+  }
+});
+
+// POST /api/member/push-token — save Expo push token to Salesforce Member__c
+router.post('/push-token', async (req, res) => {
+  try {
+    const { memberId, expoPushToken } = req.body;
+    if (!memberId || !expoPushToken) {
+      return res.status(400).json({ success: false, message: 'memberId and expoPushToken required' });
+    }
+    await updateMemberPushToken(memberId, expoPushToken);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('push-token error:', err.message);
+    res.status(500).json({ success: false, message: 'Failed to save push token' });
   }
 });
 
