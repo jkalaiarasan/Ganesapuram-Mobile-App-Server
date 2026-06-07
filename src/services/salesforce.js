@@ -132,11 +132,18 @@ async function getImageStream(versionId) {
 
 async function updateMemberPushToken(memberId, expoPushToken) {
   const { token, instanceUrl } = await getAuth();
-  await axios.patch(
-    `${instanceUrl}/services/data/v63.0/sobjects/Member__c/${memberId}`,
-    { ExpoPushToken__c: expoPushToken },
-    { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
-  );
+  try {
+    await axios.patch(
+      `${instanceUrl}/services/data/v63.0/sobjects/Member__c/${memberId}`,
+      { ExpoPushToken__c: expoPushToken },
+      { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
+    );
+    console.log(`[push-token] Saved for member ${memberId}`);
+  } catch (err) {
+    const sfErr = err.response?.data;
+    console.error('[push-token] SF error:', JSON.stringify(sfErr || err.message));
+    throw err;
+  }
 }
 
 module.exports = {
