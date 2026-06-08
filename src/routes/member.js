@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const { queryMemberByEmail, getMemberListBulk, getMemberByEmail, getImageStream, updateMemberPushToken, createErrorLog } = require('../services/salesforce');
+const { randomUUID } = require('crypto');
+const { queryMemberByEmail, getMemberListBulk, getMemberByEmail, getImageStream, updateMemberPushToken, createErrorLog, updateSessionToken, verifyMemberSession } = require('../services/salesforce');
 const { sendOtpEmail } = require('../services/zohoMail');
 const { generateOtp, createOtpToken, verifyOtpToken } = require('../services/otp');
 
@@ -28,8 +29,16 @@ router.post('/verify-otp', async (req, res) => {
     if (!valid) return res.status(401).json({ success: false, message: 'Invalid or expired OTP' });
     const member = await getMemberByEmail(email);
     if (!member) return res.status(404).json({ success: false, message: 'Member not found' });
+
+    // Generate session token for single-device enforcement
+    const sessionToken = randomUUID();
+    updateSessionToken(member.Id, sessionToken).catch(err =>
+      console.error('[session] Failed to save session token:', err.message)
+    );
+
     res.json({
       success: true,
+      sessionToken,
       member: {
         id: member.Id,
         name: member.Name,
@@ -131,6 +140,20 @@ router.get('/profile', async (req, res) => {
   } catch (err) {
     console.error('profile refresh error:', err.message);
     res.status(500).json({ success: false, message: 'Failed to fetch profile' });
+  }
+});
+
+// GET /api/member/session-check — verify session token for single-device enforcement
+router.get('/session-check', async (req, res) => {
+  const { memberId, sessionToken } = req.query;
+  if (!memberId || !sessionToken) return res.json({ valid: false });
+  try {
+    const valid = await verifyMemberSession(memberId, sessionToken);
+    res.json({ valid });
+  } catch (err) {
+    console.error('session-check error:', err.message);
+    // If Salesforce is unreachable, keep session alive
+    res.json({ valid: true });
   }
 });
 
