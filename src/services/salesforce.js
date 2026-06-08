@@ -130,6 +130,13 @@ async function getImageStream(versionId) {
   return { stream: res.data, contentType: res.headers['content-type'] || 'image/jpeg' };
 }
 
+async function getMemberPushTokens() {
+  const rows = await sfQuery(
+    `SELECT Id, Name, ExpoPushToken__c FROM Member__c WHERE Is_Approved__c = true AND ExpoPushToken__c != null`
+  );
+  return rows.map(r => ({ id: r.Id, name: r.Name, token: r.ExpoPushToken__c }));
+}
+
 async function updateMemberPushToken(memberId, expoPushToken) {
   const { token, instanceUrl } = await getAuth();
   try {
@@ -152,4 +159,5 @@ module.exports = {
   getMemberByEmail,
   getImageStream,
   updateMemberPushToken,
+  getMemberPushTokens,
 };
