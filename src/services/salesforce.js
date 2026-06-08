@@ -153,6 +153,21 @@ async function updateMemberPushToken(memberId, expoPushToken) {
   }
 }
 
+async function createErrorLog(memberId, name, description) {
+  const { token, instanceUrl } = await getAuth();
+  const payload = {
+    Name: String(name).slice(0, 80),
+    Description__c: String(description).slice(0, 32000),
+  };
+  if (memberId) payload.Member__c = memberId;
+  await axios.post(
+    `${instanceUrl}/services/data/v63.0/sobjects/ErrorLog__c`,
+    payload,
+    { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
+  );
+  console.log(`[errorLog] Created: ${name}`);
+}
+
 module.exports = {
   queryMemberByEmail,
   getMemberListBulk,
@@ -160,4 +175,5 @@ module.exports = {
   getImageStream,
   updateMemberPushToken,
   getMemberPushTokens,
+  createErrorLog,
 };

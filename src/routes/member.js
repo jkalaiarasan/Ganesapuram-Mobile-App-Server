@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const { queryMemberByEmail, getMemberListBulk, getMemberByEmail, getImageStream, updateMemberPushToken } = require('../services/salesforce');
+const { queryMemberByEmail, getMemberListBulk, getMemberByEmail, getImageStream, updateMemberPushToken, createErrorLog } = require('../services/salesforce');
 const { sendOtpEmail } = require('../services/zohoMail');
 const { generateOtp, createOtpToken, verifyOtpToken } = require('../services/otp');
 
@@ -96,6 +96,49 @@ router.get('/image/:versionId', async (req, res) => {
   } catch (err) {
     console.error('image proxy error:', err.message);
     res.status(404).end();
+  }
+});
+
+// GET /api/member/profile — refresh member data for already-logged-in user
+router.get('/profile', async (req, res) => {
+  try {
+    const { memberId, email } = req.query;
+    if (!memberId || !email) return res.status(400).json({ success: false, message: 'memberId and email required' });
+    const member = await getMemberByEmail(email);
+    if (!member || member.Id !== memberId) return res.status(404).json({ success: false, message: 'Member not found' });
+    res.json({
+      success: true,
+      member: {
+        id: member.Id,
+        name: member.Name,
+        email: member.Email__c,
+        uprId: member.UPRId__c,
+        position: member.Position__c,
+        department: member.Department__c,
+        dateOfBirth: member.DateOfBirth__c || null,
+        phone: member.Phone__c || null,
+        work: member.Work__c || null,
+        location: member.Location__c || null,
+        contentVersionId: member.contentVersionId,
+        type: member.Type__c || null,
+      },
+    });
+  } catch (err) {
+    console.error('profile refresh error:', err.message);
+    res.status(500).json({ success: false, message: 'Failed to fetch profile' });
+  }
+});
+
+// POST /api/member/error-log — create ErrorLog__c record in Salesforce
+router.post('/error-log', async (req, res) => {
+  const { name, description, memberId } = req.body;
+  if (!name) return res.status(400).json({ success: false, message: 'name required' });
+  try {
+    await createErrorLog(memberId || null, name, description || '');
+    res.json({ success: true });
+  } catch (err) {
+    console.error('error-log error:', err.message);
+    res.status(500).json({ success: false, message: 'Failed to create error log' });
   }
 });
 
