@@ -158,6 +158,24 @@ async function updateMemberPushToken(memberId, expoPushToken) {
   }
 }
 
+async function updateSessionToken(memberId, sessionToken) {
+  const { token, instanceUrl } = await getAuth();
+  await axios.patch(
+    `${instanceUrl}/services/data/v63.0/sobjects/Member__c/${memberId}`,
+    { SessionToken__c: sessionToken },
+    { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
+  );
+}
+
+async function verifyMemberSession(memberId, sessionToken) {
+  const safeId = String(memberId).replace(/[^a-zA-Z0-9]/g, '');
+  const rows = await sfQuery(
+    `SELECT SessionToken__c FROM Member__c WHERE Id = '${safeId}' LIMIT 1`
+  );
+  if (!rows[0]) return false;
+  return rows[0].SessionToken__c === sessionToken;
+}
+
 async function createErrorLog(memberId, name, description) {
   const { token, instanceUrl } = await getAuth();
   const payload = {
@@ -181,4 +199,6 @@ module.exports = {
   updateMemberPushToken,
   getMemberPushTokens,
   createErrorLog,
+  updateSessionToken,
+  verifyMemberSession,
 };
