@@ -53,15 +53,19 @@ router.post('/verify-otp', async (req, res) => {
 
 // POST /api/member/push-token — save Expo push token to Salesforce Member__c
 router.post('/push-token', async (req, res) => {
+  const { memberId, expoPushToken } = req.body;
+  if (!memberId || !expoPushToken) {
+    return res.status(400).json({ success: false, message: 'memberId and expoPushToken required' });
+  }
   try {
-    const { memberId, expoPushToken } = req.body;
-    if (!memberId || !expoPushToken) {
-      return res.status(400).json({ success: false, message: 'memberId and expoPushToken required' });
-    }
     await updateMemberPushToken(memberId, expoPushToken);
     res.json({ success: true });
   } catch (err) {
     console.error('push-token error:', err.message);
+    try {
+      await createErrorLog(memberId, 'Push Token Save Failed',
+        `Member: ${memberId} | Token: ${expoPushToken?.slice(0, 30)}... | Error: ${err.message}`);
+    } catch { /* log failure must not block the response */ }
     res.status(500).json({ success: false, message: 'Failed to save push token' });
   }
 });
