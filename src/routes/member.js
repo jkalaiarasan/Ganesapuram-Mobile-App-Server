@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { randomUUID } = require('crypto');
-const { queryMemberByEmail, getMemberListBulk, getMemberByEmail, getImageStream, updateMemberPushToken, createErrorLog, updateSessionToken, verifyMemberSession } = require('../services/salesforce');
+const { queryMemberByEmail, getMemberListBulk, getMemberByEmail, getImageStream, updateMemberPushToken, createErrorLog, updateSessionToken, verifyMemberSession, verifyPushToken } = require('../services/salesforce');
 const { sendOtpEmail } = require('../services/zohoMail');
 const { generateOtp, createOtpToken, verifyOtpToken } = require('../services/otp');
 
@@ -68,7 +68,12 @@ router.post('/push-token', async (req, res) => {
   }
   try {
     await updateMemberPushToken(memberId, expoPushToken);
-    res.json({ success: true });
+    // Query back to confirm the value actually persisted in Salesforce
+    const verified = await verifyPushToken(memberId, expoPushToken);
+    if (!verified) {
+      console.warn(`[push-token] Saved but verification failed for member ${memberId}`);
+    }
+    res.json({ success: true, verified });
   } catch (err) {
     const sfDetail = err.sfDetail ?? err.message;
     console.error('push-token error:', sfDetail);
@@ -76,7 +81,7 @@ router.post('/push-token', async (req, res) => {
       await createErrorLog(memberId, 'Push Token Save Failed',
         `Member: ${memberId} | Token: ${expoPushToken?.slice(0, 30)}... | SF: ${JSON.stringify(sfDetail)}`);
     } catch { /* log failure must not block the response */ }
-    res.status(500).json({ success: false, message: 'Failed to save push token', sfDetail });
+    res.status(500).json({ success: false, verified: false, message: 'Failed to save push token', sfDetail });
   }
 });
 

@@ -158,6 +158,14 @@ async function updateMemberPushToken(memberId, expoPushToken) {
   }
 }
 
+async function verifyPushToken(memberId, expectedToken) {
+  const safeId = String(memberId).replace(/[^a-zA-Z0-9]/g, '');
+  const rows = await sfQuery(
+    `SELECT ExpoPushToken__c FROM Member__c WHERE Id = '${safeId}' LIMIT 1`
+  );
+  return rows[0]?.ExpoPushToken__c === expectedToken;
+}
+
 async function updateSessionToken(memberId, sessionToken) {
   const { token, instanceUrl } = await getAuth();
   await axios.patch(
@@ -201,4 +209,5 @@ module.exports = {
   createErrorLog,
   updateSessionToken,
   verifyMemberSession,
+  verifyPushToken,
 };
