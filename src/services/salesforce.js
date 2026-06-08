@@ -148,8 +148,13 @@ async function updateMemberPushToken(memberId, expoPushToken) {
     console.log(`[push-token] Saved for member ${memberId}`);
   } catch (err) {
     const sfErr = err.response?.data;
-    console.error('[push-token] SF error:', JSON.stringify(sfErr || err.message));
-    throw err;
+    const detail = JSON.stringify(sfErr ?? err.message);
+    console.error('[push-token] SF error:', detail);
+    // Attach SF detail so callers can surface it
+    const rich = new Error(detail);
+    rich.sfDetail = sfErr ?? err.message;
+    rich.statusCode = err.response?.status;
+    throw rich;
   }
 }
 

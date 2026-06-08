@@ -61,12 +61,13 @@ router.post('/push-token', async (req, res) => {
     await updateMemberPushToken(memberId, expoPushToken);
     res.json({ success: true });
   } catch (err) {
-    console.error('push-token error:', err.message);
+    const sfDetail = err.sfDetail ?? err.message;
+    console.error('push-token error:', sfDetail);
     try {
       await createErrorLog(memberId, 'Push Token Save Failed',
-        `Member: ${memberId} | Token: ${expoPushToken?.slice(0, 30)}... | Error: ${err.message}`);
+        `Member: ${memberId} | Token: ${expoPushToken?.slice(0, 30)}... | SF: ${JSON.stringify(sfDetail)}`);
     } catch { /* log failure must not block the response */ }
-    res.status(500).json({ success: false, message: 'Failed to save push token' });
+    res.status(500).json({ success: false, message: 'Failed to save push token', sfDetail });
   }
 });
 
