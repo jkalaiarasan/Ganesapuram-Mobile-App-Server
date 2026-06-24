@@ -20,6 +20,8 @@ router.get('/', async (req, res) => {
       if (lat_n >= 10.947168 && lat_n <= 10.965092 && lon_n >= 78.594836 && lon_n <= 78.618714) {
         data.location.name = 'Ganesapuram';
       }
+    } else {
+      data.location.name = 'Ganesapuram';
     }
     res.json({ success: true, data });
   } catch (err) {
