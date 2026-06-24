@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
 
     const response = await axios.get(url, { timeout: 8000 });
     const data = response.data;
-
+    console.log('lat:', lat, 'lon:', lon);
     if (lat && lon) {
       const lat_n = parseFloat(lat);
       const lon_n = parseFloat(lon);
