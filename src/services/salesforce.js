@@ -63,7 +63,7 @@ async function queryMemberByEmail(email) {
 // Bulk query — 4 queries total regardless of member count (no N+1)
 async function getMemberListBulk() {
   const members = await sfQuery(
-    `SELECT Id, Name, UPRId__c, Position__c, Department__c, Phone__c
+    `SELECT Id, Name, UPRId__c, Position__c, Department__c, Phone__c, Work__c, Location__c
      FROM Member__c WHERE Is_Approved__c = true AND HidePublic__c = false ORDER BY Order__c ASC NULLS LAST`
   );
   if (!members.length) return [];
@@ -158,6 +158,21 @@ async function updateMemberPushToken(memberId, expoPushToken) {
   }
 }
 
+async function clearMemberPushToken(memberId) {
+  const { token, instanceUrl } = await getAuth();
+  try {
+    await axios.patch(
+      `${instanceUrl}/services/data/v63.0/sobjects/Member__c/${memberId}`,
+      { ExpoPushToken__c: null },
+      { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
+    );
+    console.log(`[push-token] Cleared for member ${memberId}`);
+  } catch (err) {
+    const sfErr = err.response?.data;
+    console.error('[push-token] SF clear error:', JSON.stringify(sfErr ?? err.message));
+  }
+}
+
 async function verifyPushToken(memberId, expectedToken) {
   const safeId = String(memberId).replace(/[^a-zA-Z0-9]/g, '');
   const rows = await sfQuery(
@@ -205,6 +220,7 @@ module.exports = {
   getMemberByEmail,
   getImageStream,
   updateMemberPushToken,
+  clearMemberPushToken,
   getMemberPushTokens,
   createErrorLog,
   updateSessionToken,

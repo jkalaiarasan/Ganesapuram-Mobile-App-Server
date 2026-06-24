@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { randomUUID } = require('crypto');
-const { queryMemberByEmail, getMemberListBulk, getMemberByEmail, getImageStream, updateMemberPushToken, createErrorLog, updateSessionToken, verifyMemberSession, verifyPushToken } = require('../services/salesforce');
+const { queryMemberByEmail, getMemberListBulk, getMemberByEmail, getImageStream, updateMemberPushToken, clearMemberPushToken, createErrorLog, updateSessionToken, verifyMemberSession, verifyPushToken } = require('../services/salesforce');
 const { sendOtpEmail } = require('../services/zohoMail');
 const { generateOtp, createOtpToken, verifyOtpToken } = require('../services/otp');
 
@@ -85,6 +85,14 @@ router.post('/push-token', async (req, res) => {
   }
 });
 
+// DELETE /api/member/push-token — clear Expo push token from Salesforce on logout
+router.delete('/push-token', async (req, res) => {
+  const { memberId } = req.body;
+  if (!memberId) return res.status(400).json({ success: false, message: 'memberId required' });
+  await clearMemberPushToken(memberId);
+  res.json({ success: true });
+});
+
 // GET /api/member/list — bulk query, returns contentVersionId per member
 router.get('/list', async (req, res) => {
   try {
@@ -92,10 +100,11 @@ router.get('/list', async (req, res) => {
     const members = raw.map(m => ({
       id: m.Id,
       name: m.Name,
-      uprId: m.UPRId__c,
       position: m.Position__c,
       department: m.Department__c,
       phone: m.Phone__c || null,
+      work: m.Work__c || null,
+      location: m.Location__c || null,
       contentVersionId: m.contentVersionId,
     }));
     res.json({ success: true, members });
