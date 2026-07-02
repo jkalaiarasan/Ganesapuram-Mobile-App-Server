@@ -93,7 +93,7 @@ router.delete('/push-token', async (req, res) => {
   res.json({ success: true });
 });
 
-// POST /api/member/heartbeat — stamp Last_Seen__c for online presence
+// POST /api/member/heartbeat — stamp LastSeen__c for online presence
 router.post('/heartbeat', async (req, res) => {
   const { memberId } = req.body;
   if (!memberId) return res.status(400).json({ success: false, message: 'memberId required' });
@@ -119,7 +119,7 @@ router.get('/list', async (req, res) => {
       work: m.Work__c || null,
       location: m.Location__c || null,
       contentVersionId: m.contentVersionId,
-      lastSeen: m.Last_Seen__c || null,
+      lastSeen: m.LastSeen__c || null,
     }));
     res.json({ success: true, members });
   } catch (err) {
