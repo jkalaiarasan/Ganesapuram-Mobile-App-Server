@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const { randomUUID } = require('crypto');
-const { queryMemberByEmail, getMemberListBulk, getMemberByEmail, getImageStream, updateMemberPushToken, clearMemberPushToken, createErrorLog, updateSessionToken, verifyMemberSession, verifyPushToken } = require('../services/salesforce');
+const { queryMemberByEmail, getMemberListBulk, getMemberByEmail, getImageStream, updateMemberPushToken, clearMemberPushToken, createErrorLog, updateSessionToken, verifyMemberSession, verifyPushToken, updateLastSeen } = require('../services/salesforce');
 const { sendOtpEmail } = require('../services/zohoMail');
 const { generateOtp, createOtpToken, verifyOtpToken } = require('../services/otp');
 
@@ -93,6 +93,19 @@ router.delete('/push-token', async (req, res) => {
   res.json({ success: true });
 });
 
+// POST /api/member/heartbeat — stamp Last_Seen__c for online presence
+router.post('/heartbeat', async (req, res) => {
+  const { memberId } = req.body;
+  if (!memberId) return res.status(400).json({ success: false, message: 'memberId required' });
+  try {
+    await updateLastSeen(memberId);
+    res.json({ success: true });
+  } catch (err) {
+    console.error('heartbeat error:', err.message);
+    res.status(500).json({ success: false, message: 'Failed to update last seen' });
+  }
+});
+
 // GET /api/member/list — bulk query, returns contentVersionId per member
 router.get('/list', async (req, res) => {
   try {
@@ -106,6 +119,7 @@ router.get('/list', async (req, res) => {
       work: m.Work__c || null,
       location: m.Location__c || null,
       contentVersionId: m.contentVersionId,
+      lastSeen: m.Last_Seen__c || null,
     }));
     res.json({ success: true, members });
   } catch (err) {

@@ -63,7 +63,7 @@ async function queryMemberByEmail(email) {
 // Bulk query — 4 queries total regardless of member count (no N+1)
 async function getMemberListBulk() {
   const members = await sfQuery(
-    `SELECT Id, Name, UPRId__c, Position__c, Department__c, Phone__c, Work__c, Location__c
+    `SELECT Id, Name, UPRId__c, Position__c, Department__c, Phone__c, Work__c, Location__c, Last_Seen__c
      FROM Member__c WHERE Is_Approved__c = true AND HidePublic__c = false ORDER BY Order__c ASC NULLS LAST`
   );
   if (!members.length) return [];
@@ -190,6 +190,17 @@ async function updateSessionToken(memberId, sessionToken) {
   );
 }
 
+// Online presence — stamp Last_Seen__c with the current time
+async function updateLastSeen(memberId) {
+  const { token, instanceUrl } = await getAuth();
+  const safeId = String(memberId).replace(/[^a-zA-Z0-9]/g, '');
+  await axios.patch(
+    `${instanceUrl}/services/data/v63.0/sobjects/Member__c/${safeId}`,
+    { Last_Seen__c: new Date().toISOString() },
+    { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
+  );
+}
+
 async function verifyMemberSession(memberId, sessionToken) {
   const safeId = String(memberId).replace(/[^a-zA-Z0-9]/g, '');
   const rows = await sfQuery(
@@ -226,4 +237,5 @@ module.exports = {
   updateSessionToken,
   verifyMemberSession,
   verifyPushToken,
+  updateLastSeen,
 };
