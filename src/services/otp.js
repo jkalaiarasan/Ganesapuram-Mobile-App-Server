@@ -1,14 +1,12 @@
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 
-// Public fallback — only here so a missing env var cannot take login down.
-// Set JWT_SECRET in the deployment environment and this is never used.
-const FALLBACK_SECRET = 'upr-ganesapuram-otp-secret';
-const SECRET = process.env.JWT_SECRET || FALLBACK_SECRET;
+const SECRET = process.env.JWT_SECRET;
 const EXPIRY = (parseInt(process.env.OTP_EXPIRY_MINUTES, 10) || 10) * 60; // seconds
 
-if (!process.env.JWT_SECRET) {
-  console.warn('[otp] JWT_SECRET is not set — signing with a publicly known fallback. Set JWT_SECRET now.');
+// Fail at boot rather than silently signing with a guessable default.
+if (!SECRET) {
+  throw new Error('JWT_SECRET is not set — refusing to sign OTP tokens.');
 }
 
 function generateOtp() {
