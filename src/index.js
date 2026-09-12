@@ -7,6 +7,7 @@ const memberRoutes = require('./routes/member');
 const weatherRoutes = require('./routes/weather');
 const kuralRoutes = require('./routes/kural');
 const notificationRoutes = require('./routes/notification');
+const communityRoutes = require('./routes/community');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -20,6 +21,7 @@ app.use('/api/member', memberRoutes);
 app.use('/api/weather', weatherRoutes);
 app.use('/api/kural', kuralRoutes);
 app.use('/api/notifications', notificationRoutes);
+app.use('/api/community', communityRoutes);
 
 app.get('/health', (req, res) => res.json({ status: 'ok', time: new Date().toISOString() }));
 

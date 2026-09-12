@@ -231,7 +231,28 @@ async function createErrorLog(memberId, name, description) {
   console.log(`[errorLog] Created: ${name}`);
 }
 
+// Status__c picklist is "Pending Approval" / Accepted / Rejected / Cancelled —
+// not "Pending", which would fail the picklist restriction.
+async function createTripMember(eventId, { name, mobile, email }) {
+  const { token, instanceUrl } = await getAuth();
+  const res = await axios.post(
+    `${instanceUrl}/services/data/v63.0/sobjects/TripMember__c`,
+    {
+      Name: String(name).slice(0, 80),
+      Event__c: eventId,
+      MobileNo__c: mobile,
+      Email__c: email || null,
+      Status__c: 'Pending Approval',
+    },
+    { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
+  );
+  return res.data.id;
+}
+
 module.exports = {
+  sfQuery,
+  soqlEscape,
+  createTripMember,
   queryMemberByEmail,
   getMemberListBulk,
   getMemberByEmail,
