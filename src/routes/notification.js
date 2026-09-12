@@ -1,12 +1,21 @@
 const express = require('express');
+const crypto = require('crypto');
 const router = express.Router();
 const { getMemberPushTokens } = require('../services/salesforce');
 const { sendExpoPushNotifications } = require('../services/notification');
 
-const NOTIF_SECRET = 'upr-ganesapuram-notif-secret-2024';
+const NOTIF_SECRET = process.env.NOTIF_SECRET;
 
 function checkSecret(req, res) {
-  if (req.body.secret !== NOTIF_SECRET) {
+  // Fail closed: an unset secret disables the endpoint rather than allowing it.
+  if (!NOTIF_SECRET) {
+    res.status(503).json({ success: false, message: 'Endpoint disabled: NOTIF_SECRET not configured' });
+    return false;
+  }
+
+  const provided = Buffer.from(String(req.body.secret ?? ''), 'utf8');
+  const expected = Buffer.from(NOTIF_SECRET, 'utf8');
+  if (provided.length !== expected.length || !crypto.timingSafeEqual(provided, expected)) {
     res.status(401).json({ success: false, message: 'Unauthorized' });
     return false;
   }

@@ -8,6 +8,12 @@ let tokenCache = null;
 let instanceUrlCache = null;
 let tokenExpiry = null;
 
+// Backslashes must be escaped before quotes, or the added escape char is itself
+// left unescaped and the string literal can still be broken out of.
+function soqlEscape(value) {
+  return String(value).replace(/\\/g, '\\\\').replace(/'/g, "\\'");
+}
+
 async function getAuth() {
   if (tokenCache && instanceUrlCache && tokenExpiry && Date.now() < tokenExpiry) {
     return { token: tokenCache, instanceUrl: instanceUrlCache };
@@ -55,7 +61,7 @@ async function sfQuery(soql) {
 
 async function queryMemberByEmail(email) {
   const rows = await sfQuery(
-    `SELECT Id, Name, Email__c FROM Member__c WHERE Email__c = '${email.replace(/'/g, "\\'")}' AND Is_Approved__c = true LIMIT 1`
+    `SELECT Id, Name, Email__c FROM Member__c WHERE Email__c = '${soqlEscape(email)}' AND Is_Approved__c = true LIMIT 1`
   );
   return rows[0] || null;
 }
@@ -101,7 +107,7 @@ async function getMemberByEmail(email) {
   const rows = await sfQuery(
     `SELECT Id, Name, Email__c, UPRId__c, Position__c, Department__c,
             DateOfBirth__c, Phone__c, Work__c, Location__c, Type__c
-     FROM Member__c WHERE Email__c = '${email.replace(/'/g, "\\'")}' AND Is_Approved__c = true LIMIT 1`
+     FROM Member__c WHERE Email__c = '${soqlEscape(email)}' AND Is_Approved__c = true LIMIT 1`
   );
   if (!rows[0]) return null;
   const m = rows[0];
