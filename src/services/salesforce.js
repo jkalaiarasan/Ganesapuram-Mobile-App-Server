@@ -133,7 +133,11 @@ async function getImageStream(versionId) {
     `${instanceUrl}/services/data/v63.0/sobjects/ContentVersion/${versionId}/VersionData`,
     { headers: { Authorization: `Bearer ${token}` }, responseType: 'stream', timeout: 10000 }
   );
-  return { stream: res.data, contentType: res.headers['content-type'] || 'image/jpeg' };
+  // Salesforce answers VersionData with "application/octetstream" — not a valid
+  // type, and not one an <Image> will render. Only trust a real image/* header.
+  const raw = res.headers['content-type'];
+  const contentType = typeof raw === 'string' && raw.startsWith('image/') ? raw : 'image/jpeg';
+  return { stream: res.data, contentType };
 }
 
 async function getMemberPushTokens() {
