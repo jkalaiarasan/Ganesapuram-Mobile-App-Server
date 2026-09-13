@@ -9,6 +9,10 @@ const kuralRoutes = require('./routes/kural');
 const notificationRoutes = require('./routes/notification');
 const communityRoutes = require('./routes/community');
 const quizRoutes = require('./routes/quiz');
+const { installGlobalErrorReporting, notifyError } = require('./services/telegram');
+
+// Every server failure reaches Telegram from here, including code added later.
+installGlobalErrorReporting();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -29,6 +33,7 @@ app.get('/health', (req, res) => res.json({ status: 'ok', time: new Date().toISO
 
 app.use((err, req, res, next) => {
   console.error(err.stack);
+  notifyError(`${req.method} ${req.originalUrl}`, err);
   res.status(500).json({ success: false, message: 'Internal server error' });
 });
 
