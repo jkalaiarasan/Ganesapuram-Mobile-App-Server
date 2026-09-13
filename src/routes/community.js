@@ -172,6 +172,47 @@ router.get('/calendar', async (req, res) => {
   }
 });
 
+// GET /api/community/birthdays/today — whoever is celebrating today, so the
+// app can surface it without pulling the whole calendar.
+router.get('/birthdays/today', async (req, res) => {
+  try {
+    const rows = await sfQuery(
+      `SELECT Id, Name, UPRId__c, DateOfBirth__c, Position__c
+       FROM Member__c
+       WHERE Is_Approved__c = true AND HidePublic__c = false AND DateOfBirth__c != null`
+    );
+
+    // Compare month/day in the server's local date rather than filtering in
+    // SOQL, so this matches what CALENDAR_MONTH/DAY_IN_MONTH pick in the batch.
+    const now = new Date();
+    const m = now.getMonth() + 1;
+    const d = now.getDate();
+
+    const todays = rows.filter(r => {
+      const [, mm, dd] = String(r.DateOfBirth__c).split('-');
+      return parseInt(mm, 10) === m && parseInt(dd, 10) === d;
+    });
+
+    res.json({
+      success: true,
+      date: `${now.getFullYear()}-${String(m).padStart(2, '0')}-${String(d).padStart(2, '0')}`,
+      birthdays: todays.map(r => {
+        const year = parseInt(String(r.DateOfBirth__c).split('-')[0], 10);
+        return {
+          id: r.Id,
+          name: r.Name,
+          uprId: r.UPRId__c || null,
+          position: r.Position__c || null,
+          turning: Number.isFinite(year) ? now.getFullYear() - year : null,
+        };
+      }),
+    });
+  } catch (err) {
+    console.error('birthdays today error:', err.message);
+    res.status(500).json({ success: false, message: 'Failed to fetch birthdays' });
+  }
+});
+
 // GET /api/community/news — approved announcements only.
 router.get('/news', async (req, res) => {
   try {
