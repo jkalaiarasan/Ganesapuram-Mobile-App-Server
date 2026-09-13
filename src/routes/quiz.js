@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
-const { sfQuery, soqlEscape, sfUpdateRecord, sfInsertMany } = require('../services/salesforce');
+const {
+  sfQuery, soqlEscape, sfCreateRecord, sfUpdateRecord, sfInsertMany,
+} = require('../services/salesforce');
 
 function validId(id) {
   return typeof id === 'string' && /^[a-zA-Z0-9]{15,18}$/.test(id);
@@ -87,6 +89,89 @@ router.post('/login', async (req, res) => {
   } catch (err) {
     console.error('quiz login error:', err.message);
     res.status(500).json({ success: false, message: 'Login failed' });
+  }
+});
+
+// POST /api/quiz/register — { name, email }
+// Insert only. QuizMemberTrigger assigns the quiz and a zero score before
+// insert, then notifies the admin on Telegram and emails the registrant, so a
+// login code is issued only once an admin approves.
+router.post('/register', async (req, res) => {
+  const { name, email } = req.body;
+  if (!name || !email) {
+    return res.status(400).json({ success: false, message: 'name and email are required' });
+  }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email))) {
+    return res.status(400).json({ success: false, message: 'Enter a valid email address' });
+  }
+
+  try {
+    const existing = await sfQuery(
+      `SELECT Id, IsApproved__c FROM QuizMember__c
+       WHERE Email__c = '${soqlEscape(email)}' LIMIT 1`
+    );
+    if (existing.length) {
+      return res.status(409).json({
+        success: false,
+        message: existing[0].IsApproved__c
+          ? 'This email is already registered and approved'
+          : 'This email is already registered and awaiting approval',
+      });
+    }
+
+    // One record per call: QuizMemberTrigger only ever handles Trigger.new[0],
+    // so a batched insert would silently skip everyone after the first.
+    const id = await sfCreateRecord('QuizMember__c', {
+      Name: String(name).slice(0, 80),
+      Email__c: email,
+    });
+
+    res.json({
+      success: true,
+      id,
+      message: 'Registration received. You will get your login code once an admin approves.',
+    });
+  } catch (err) {
+    console.error('quiz register error:', err.response?.data ?? err.message);
+    res.status(500).json({ success: false, message: 'Registration failed' });
+  }
+});
+
+// GET /api/quiz/:quizId/results — leaderboard, published quizzes only.
+// Mirrors QuizController.getQuizMembersWithScores.
+router.get('/:quizId/results', async (req, res) => {
+  const { quizId } = req.params;
+  if (!validId(quizId)) return res.status(400).json({ success: false, message: 'Invalid quiz id' });
+
+  try {
+    const rows = await sfQuery(
+      `SELECT Id, Name, UserId__c, Score__c, FinalScore__c, WarningCount__c, Quiz__r.Name
+       FROM QuizMember__c
+       WHERE Quiz__c = '${quizId}' AND Quiz__r.ResultPublished__c = true
+       ORDER BY FinalScore__c DESC NULLS LAST, Score__c DESC NULLS LAST`
+    );
+
+    if (!rows.length) {
+      return res.json({ success: true, published: false, quizName: null, results: [] });
+    }
+
+    res.json({
+      success: true,
+      published: true,
+      quizName: rows[0].Quiz__r?.Name ?? null,
+      results: rows.map((m, i) => ({
+        rank: i + 1,
+        id: m.Id,
+        name: m.Name,
+        userId: m.UserId__c ?? null,
+        score: m.Score__c ?? 0,
+        finalScore: m.FinalScore__c ?? null,
+        warningCount: m.WarningCount__c ?? 0,
+      })),
+    });
+  } catch (err) {
+    console.error('quiz results error:', err.message);
+    res.status(500).json({ success: false, message: 'Failed to load results' });
   }
 });
 

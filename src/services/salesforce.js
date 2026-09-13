@@ -253,6 +253,16 @@ async function createTripMember(eventId, { name, mobile, email }) {
   return res.data.id;
 }
 
+async function sfCreateRecord(objectName, fields) {
+  const { token, instanceUrl } = await getAuth();
+  const res = await axios.post(
+    `${instanceUrl}/services/data/v63.0/sobjects/${objectName}`,
+    fields,
+    { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
+  );
+  return res.data.id;
+}
+
 async function sfUpdateRecord(objectName, id, fields) {
   const { token, instanceUrl } = await getAuth();
   await axios.patch(
@@ -281,6 +291,7 @@ async function sfInsertMany(objectName, rows) {
 module.exports = {
   sfQuery,
   soqlEscape,
+  sfCreateRecord,
   sfUpdateRecord,
   sfInsertMany,
   createTripMember,
