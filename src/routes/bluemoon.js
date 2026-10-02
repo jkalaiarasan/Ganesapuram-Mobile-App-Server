@@ -115,6 +115,7 @@ async function loadTrip(id) {
   const rows = await sfQuery(
     `SELECT Id, Name, NameEnglish__c, Date__c, Destination__c, Venue__c, DepartureTime__c, ReturnTime__c,
             TotalSeat__c, EventCode__c, Organizer__c, Type__c, SubTotal__c, GSTAmount__c, TotalAmount__c,
+            IsActiveTrip__c,
             (SELECT Name, Description__c, Price__c, Quantity__c, IsGSTApplicable__c, GSTPercent__c,
                     GSTAmount__c, TotalAmount__c
              FROM LineItems__r ORDER BY Order__c ASC NULLS LAST, Name)
@@ -123,11 +124,40 @@ async function loadTrip(id) {
   return rows[0] || null;
 }
 
+// Registration is open only while Event__c.IsActiveTrip__c is ticked — the same
+// switch the site's Blue Moon page uses — and the trip date has not passed.
 function isClosed(trip) {
+  if (!trip.IsActiveTrip__c) return true;
   if (!trip.Date__c) return false;
   const today = new Date().toISOString().slice(0, 10);
   return trip.Date__c < today;
 }
+
+// GET /api/bluemoon/trips — the trips currently open on Blue Moon
+// (IsActiveTrip__c), soonest first.
+router.get('/trips', async (req, res) => {
+  try {
+    const rows = await sfQuery(
+      `SELECT Id, Name, NameEnglish__c, Date__c, Destination__c
+       FROM Event__c
+       WHERE Type__c = 'Trip' AND IsActiveTrip__c = true
+       ORDER BY Date__c ASC NULLS LAST`
+    );
+    res.json({
+      success: true,
+      trips: rows.map(t => ({
+        id: t.Id,
+        name: t.Name,
+        nameEnglish: t.NameEnglish__c || null,
+        date: t.Date__c || null,
+        destination: t.Destination__c || null,
+      })),
+    });
+  } catch (err) {
+    console.error('bluemoon trips error:', err.message);
+    res.status(500).json({ success: false, message: 'Failed to fetch trips' });
+  }
+});
 
 // GET /api/bluemoon/trips/:id — full trip detail. The roster is public; each
 // entry carries `billing` only when the caller may see it.
@@ -214,6 +244,7 @@ router.get('/trips/:id', async (req, res) => {
         pending,
         rejected,
         seatsLeft: trip.TotalSeat__c != null ? Math.max(trip.TotalSeat__c - accepted, 0) : null,
+        isActive: trip.IsActiveTrip__c === true,
         closed: isClosed(trip),
         price: {
           subTotal: money(trip.SubTotal__c),

@@ -292,6 +292,13 @@ router.post('/trip/:id/register', async (req, res) => {
   }
 
   try {
+    // Older app builds still call this route; hold them to the same
+    // IsActiveTrip__c switch as /api/bluemoon.
+    const trip = await sfQuery(`SELECT IsActiveTrip__c FROM Event__c WHERE Id = '${id}' LIMIT 1`);
+    if (!trip[0]?.IsActiveTrip__c) {
+      return res.status(400).json({ success: false, message: 'Registration for this trip is closed' });
+    }
+
     const existing = await sfQuery(
       `SELECT Id FROM TripMember__c
        WHERE Event__c = '${id}' AND MobileNo__c = '${soqlEscape(mobile)}' LIMIT 1`
