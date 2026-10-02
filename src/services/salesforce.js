@@ -235,7 +235,7 @@ async function createErrorLog(memberId, name, description) {
   console.log(`[errorLog] Created: ${name}`);
 }
 
-// Status__c picklist is "Pending Approval" / Accepted / Rejected / Cancelled —
+// Status__c picklist is "Pending Acceptance" / Accepted / Rejected / Cancelled —
 // not "Pending", which would fail the picklist restriction.
 async function createTripMember(eventId, { name, mobile, email }) {
   const { token, instanceUrl } = await getAuth();
@@ -246,7 +246,7 @@ async function createTripMember(eventId, { name, mobile, email }) {
       Event__c: eventId,
       MobileNo__c: mobile,
       Email__c: email || null,
-      Status__c: 'Pending Approval',
+      Status__c: 'Pending Acceptance',
     },
     { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
   );
@@ -270,6 +270,17 @@ async function sfUpdateRecord(objectName, id, fields) {
     fields,
     { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
   );
+}
+
+// Calls a custom Apex REST resource (e.g. '/bluemoon') and returns its body.
+async function sfApexRest(path, body) {
+  const { token, instanceUrl } = await getAuth();
+  const res = await axios.post(
+    `${instanceUrl}/services/apexrest${path}`,
+    body,
+    { headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' } }
+  );
+  return res.data;
 }
 
 async function sfDeleteRecord(objectName, id) {
@@ -302,6 +313,7 @@ module.exports = {
   sfCreateRecord,
   sfUpdateRecord,
   sfDeleteRecord,
+  sfApexRest,
   sfInsertMany,
   createTripMember,
   queryMemberByEmail,

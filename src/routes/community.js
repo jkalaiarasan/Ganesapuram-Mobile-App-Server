@@ -102,7 +102,7 @@ router.get('/events/:id', async (req, res) => {
     ]);
 
     const counts = tripMembers.reduce((acc, m) => {
-      const key = (m.Status__c || 'Pending Approval').toLowerCase();
+      const key = (m.Status__c || 'Pending Acceptance').toLowerCase();
       acc[key] = (acc[key] || 0) + 1;
       return acc;
     }, {});
@@ -112,7 +112,7 @@ router.get('/events/:id', async (req, res) => {
       tripMembers: tripMembers.map(m => ({
         id: m.Id,
         name: m.Name,
-        status: m.Status__c || 'Pending Approval',
+        status: m.Status__c || 'Pending Acceptance',
         mobile: m.MobileNo__c || null,
         signedBy: m.SignedBy__c || null,
         signedTime: m.SignedTime__c || null,
