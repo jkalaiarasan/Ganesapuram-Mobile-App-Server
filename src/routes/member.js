@@ -52,6 +52,7 @@ router.post('/verify-otp', async (req, res) => {
         location: member.Location__c || null,
         contentVersionId: member.contentVersionId,
         type: member.Type__c || null,
+        isBlueMoonAdmin: member.IsBlueMoonAdmin__c === true,
       },
     });
   } catch (err) {
@@ -163,6 +164,7 @@ router.get('/profile', async (req, res) => {
         location: member.Location__c || null,
         contentVersionId: member.contentVersionId,
         type: member.Type__c || null,
+        isBlueMoonAdmin: member.IsBlueMoonAdmin__c === true,
       },
     });
   } catch (err) {

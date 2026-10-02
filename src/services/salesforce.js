@@ -106,7 +106,7 @@ async function getMemberListBulk() {
 async function getMemberByEmail(email) {
   const rows = await sfQuery(
     `SELECT Id, Name, Email__c, UPRId__c, Position__c, Department__c,
-            DateOfBirth__c, Phone__c, Work__c, Location__c, Type__c
+            DateOfBirth__c, Phone__c, Work__c, Location__c, Type__c, IsBlueMoonAdmin__c
      FROM Member__c WHERE Email__c = '${soqlEscape(email)}' AND Is_Approved__c = true LIMIT 1`
   );
   if (!rows[0]) return null;
@@ -272,6 +272,14 @@ async function sfUpdateRecord(objectName, id, fields) {
   );
 }
 
+async function sfDeleteRecord(objectName, id) {
+  const { token, instanceUrl } = await getAuth();
+  await axios.delete(
+    `${instanceUrl}/services/data/v63.0/sobjects/${objectName}/${id}`,
+    { headers: { Authorization: `Bearer ${token}` } }
+  );
+}
+
 // Composite insert — up to 200 records in one round trip, all-or-nothing so a
 // partial answer set can never be saved.
 async function sfInsertMany(objectName, rows) {
@@ -293,6 +301,7 @@ module.exports = {
   soqlEscape,
   sfCreateRecord,
   sfUpdateRecord,
+  sfDeleteRecord,
   sfInsertMany,
   createTripMember,
   queryMemberByEmail,
